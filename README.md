@@ -135,7 +135,7 @@ These are the available options for creating a `HealthChecksApiClient` instance.
 
 ## Examples
 
-### `HealthChecksPingClient` Examples:
+#### `HealthChecksPingClient` Examples:
 
 Create an instance:
 
@@ -179,7 +179,7 @@ async function performTask() {
 }
 ```
 
-### `HealthChecksApiClient` Examples:
+#### `HealthChecksApiClient` Examples:
 
 Create an instance:
 
@@ -233,13 +233,13 @@ async function createHealthCheck() {
 
 ## Documentation
 
-### `HealthChecksPingClient` Documentation:
+#### `HealthChecksPingClient` Documentation:
 
 - **`pingClient.success(payload)`** - Send a "success" ping on task completion (with optional payload) - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)  
 - **`pingClient.fail(payload)`** - Send a "fail" ping on task failure (with optional payload) - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)
 - **`pingClient.start()`** - Sends a "job has started!" message - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)  
 
-### `HealthChecksApiClient` Documentation:
+#### `HealthChecksApiClient` Documentation:
 
 - **`apiClient.getChecks(tags)`** - Gets a list of health checks - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#list-checks)  
 - **`apiClient.getCheck(uuid)`** - Gets the information for a health check - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#get-check)  
