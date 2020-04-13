@@ -34,5 +34,7 @@ module.exports = {
         },
       }
     ],
+    'array-bracket-spacing': [ 'error', 'always' ],
+    'no-console': 'error',
   },
 };

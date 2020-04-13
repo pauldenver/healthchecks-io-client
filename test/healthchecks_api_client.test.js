@@ -3,6 +3,7 @@ const chaiAsPromised = require('chai-as-promised');
 const rewire = require('rewire');
 const nock = require('nock');
 const { HealthChecksApiClient } = require('../lib');
+const { uuidSchema } = require('../lib/utils/validation');
 
 // Use 'chai-as-promised'.
 chai.use(chaiAsPromised);
@@ -38,6 +39,11 @@ describe('Healthchecks.io API Client Tests', () => {
     it(`should have a private '_checkApiKey' method`, () => {
       expect(client._checkApiKey).to.be.an('function');
       expect(client._checkApiKey).to.be.an.instanceof(Function);
+    });
+
+    it(`should have a private '_checkInput' method`, () => {
+      expect(client._checkInput).to.be.an('function');
+      expect(client._checkInput).to.be.an.instanceof(Function);
     });
 
     it(`should have a private '_getRequestHeaders' method`, () => {
@@ -157,6 +163,23 @@ describe('Healthchecks.io API Client Tests', () => {
         expect(err).to.have.property('message',
           'A HealthChecks.io Api Key is a required option.');
       }
+    });
+  });
+
+  context('#_checkInput()', () => {
+    it('should validate a valid input value', () => {
+      expect(() => {
+        client._checkInput(
+          [ '3c1169a0-7b50-11ea-873d-3c970e75c219' ],
+          [ uuidSchema ]
+        );
+      }).to.not.throw();
+    });
+
+    it('should throw an error for an invalid input value', () => {
+      expect(() => {
+        client._checkInput([ 'Not a UUID' ], [ uuidSchema ]);
+      }).to.throw(Error);
     });
   });
 

@@ -1,7 +1,7 @@
 {
   "name": "healthchecks-io-client",
   "description": "A library for interacting with the Healthchecks.io API",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./lib/index.js",
   "keywords": [
     "healthchecks.io",
@@ -25,6 +25,7 @@
     "test:codecov": "nyc report --reporter=text-lcov | codecov --pipe"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "axios": "^0.19.2",
     "lodash.has": "^4.5.2",
     "lodash.isempty": "^4.4.0",

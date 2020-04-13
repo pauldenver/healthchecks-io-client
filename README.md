@@ -110,18 +110,19 @@ Windows:
 
 ### Options
 
-#### `HealthChecksPingClient` Options:
+#### `HealthChecksPingClient` Options:  
 
 These are the available options for creating a `HealthChecksPingClient` instance.
 
 | Name                | Default                      |  Description                                                 |
 | ------------------- | ---------------------------- | ------------------------------------------------------------ |  
-| `uuid`              | `undefined`                  | <span>Healthchecks</span>&#46;io API Key                     |
+| `uuid`              | `undefined`                  | UUID of an existing health check                             |
 | `timeout`           | `5000`                       | Number of milliseconds before the request times out          |
 | `baseUrl`           | `https://hc-ping.com`        | Base URL for the <span>Healthchecks</span>&#46;io Ping API   |
-| `returnResponse`    | `false`                      | Return the response from the request                         |
+| `returnResponse`    | `false`                      | Return the response from the request                         |  
+<br />
 
-#### `HealthChecksApiClient` Options:
+#### `HealthChecksApiClient` Options:  
 
 These are the available options for creating a `HealthChecksApiClient` instance.
 
@@ -131,7 +132,8 @@ These are the available options for creating a `HealthChecksApiClient` instance.
 | `timeout`           | `5000`                       | Number of milliseconds before the request times out               |
 | `baseUrl`           | `https://healthchecks.io`    | Base URL for the <span>Healthchecks</span>&#46;io Management API  |
 | `fullResponse`      | `false`                      | Get the full response instead of just the body                    |
-| `maxContentLength`  | `10000`                      | The max size of the HTTP response content in bytes                |
+| `maxContentLength`  | `10000`                      | The max size of the HTTP response content in bytes                |  
+<br />
 
 ## Examples
 
@@ -250,6 +252,10 @@ async function createHealthCheck() {
 - **`apiClient.getIntegrations()`** - Gets a list of integrations - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#list-channels)  
 
 ## Change Log
+
+### v1.0.1
+
+- Added input validation using `Joi`.
 
 ### v1.0.0
 

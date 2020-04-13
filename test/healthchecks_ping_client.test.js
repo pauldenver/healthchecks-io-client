@@ -35,6 +35,11 @@ describe('Healthchecks.io Ping Client Tests', () => {
       expect(client.constructor).to.be.an.instanceof(Function);
     });
 
+    it(`should have a private '_checkUUID' method`, () => {
+      expect(client._checkUUID).to.be.an('function');
+      expect(client._checkUUID).to.be.an.instanceof(Function);
+    });
+
     it(`should have a private '_getRequestHeaders' method`, () => {
       expect(client._getRequestHeaders).to.be.an('function');
       expect(client._getRequestHeaders).to.be.an.instanceof(Function);
@@ -92,6 +97,16 @@ describe('Healthchecks.io Ping Client Tests', () => {
       expect(client).to.have.property('_uuid');
       expect(client._uuid).to.be.a('string');
       expect(client._uuid).to.eql(clientOptions.uuid);
+    });
+  });
+
+  context('#_checkUUID()', () => {
+    it('should throw an error when missing a uuid', () => {
+      expect(() => new HealthChecksPingClient({})).to.throw(Error);
+    });
+
+    it('should throw an error for an invalid uuid', () => {
+      expect(() => new HealthChecksPingClient({ uuid: 'Test' })).to.throw(Error);
     });
   });
 
