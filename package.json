@@ -1,7 +1,7 @@
 {
   "name": "healthchecks-io-client",
   "description": "A library for interacting with the Healthchecks.io API",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./lib/index.js",
   "keywords": [
     "healthchecks.io",

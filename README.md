@@ -19,6 +19,7 @@ the [Healthchecks.io Ping API](https://healthchecks.io/docs/http_api/) and the [
   - [Management API Client Examples](#healthchecksapiclient-examples)
 - [Documentation](#documentation)
   - [Ping API Client Documentation](#healthcheckspingclient-documentation)
+  - [Ping Wrapper Documentation](#ping-wrapper-documentation)
   - [Management API Client Documentation](#healthchecksapiclient-documentation)
 - [Change Log](#change-log)
 - [License](#license)
@@ -41,7 +42,7 @@ $ yarn add healthchecks-io-client
 
 ### Initializing a client
 
-The library exports two classes for interacting with the <span>Healthchecks</span>&#46;io APIs. The `HealthChecksPingClient` class interacts with the [Healthchecks.io Ping API](https://healthchecks.io/docs/http_api/). The `HealthChecksApiClient` class interacts with the [Healthchecks.io Management API](https://healthchecks.io/docs/api/).
+The library exports two classes for interacting with the <span>Healthchecks</span>&#46;io APIs and a `ping` shorthand/wrapper function. The `HealthChecksPingClient` class interacts with the [Healthchecks.io Ping API](https://healthchecks.io/docs/http_api/). The `HealthChecksApiClient` class interacts with the [Healthchecks.io Management API](https://healthchecks.io/docs/api/).
 
 For a `HealthChecksPingClient` instance, you'll need the `uuid` of a health check. For a `HealthChecksApiClient` instance, you'll need an API key provided by <span>Healthchecks</span>&#46;io. You can provide the API key as an `apiKey` option or set the API key as an environment variable using `HC_API_KEY`. By default, the client will use the `HC_API_KEY` environment variable if the `apiKey` option is not provided.  
 
@@ -181,6 +182,44 @@ async function performTask() {
 }
 ```
 
+Alternatively, instead of exporting the `HealthChecksPingClient` you can export just the ping functionality.
+
+```javascript
+// Export the 'ping' function.
+const { ping } = require('healthchecks-io-client');
+```
+
+Send a "success" ping:
+
+```javascript
+async function performTask(uuid) {
+  /*
+   * Add task logic here.
+   */
+
+  // Signal a "success" after completion.
+  await ping(uuid, 'success');
+}
+```
+
+Send a "success" ping on task completion and send a "fail" ping on task failure:
+
+```javascript
+async function performTask(uuid) {
+  try {
+    /*
+     * Add task logic here.
+     */
+
+    // Signal a "success" after completion.
+    await ping(uuid);
+  } catch(err) {
+    // Send a "fail" ping on failure.
+    await ping(uuid, 'fail');
+  }
+}
+```
+
 #### `HealthChecksApiClient` Examples:
 
 Create an instance:
@@ -241,6 +280,10 @@ async function createHealthCheck() {
 - **`pingClient.fail(payload)`** - Send a "fail" ping on task failure (with optional payload) - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)
 - **`pingClient.start()`** - Sends a "job has started!" message - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)  
 
+#### `ping` Wrapper Documentation:
+
+- **`ping(uuid, action, payload)`** - Send a "success" or "fail" ping on task completion or task failure (with optional payload) - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)  
+
 #### `HealthChecksApiClient` Documentation:
 
 - **`apiClient.getChecks(tags)`** - Gets a list of health checks - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#list-checks)  
@@ -252,6 +295,14 @@ async function createHealthCheck() {
 - **`apiClient.getIntegrations()`** - Gets a list of integrations - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#list-channels)  
 
 ## Change Log
+
+### v1.0.3
+
+- Updated documentation.
+
+### v1.0.2
+
+- Added a shorthand version (wrapper) for `HealthChecksPingClient` pings.
 
 ### v1.0.1
 
