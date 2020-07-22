@@ -2,7 +2,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const rewire = require('rewire');
 const nock = require('nock');
-const { HealthChecksPingClient } = require('../lib');
+const { HealthChecksPingClient, ping } = require('../lib');
 
 // Use 'chai-as-promised'.
 chai.use(chaiAsPromised);
@@ -145,7 +145,7 @@ describe('Healthchecks.io Ping Client Tests', () => {
       err.config = {};
       err.request = {};
       err.isAxiosError = true;
-      err.toJSON = () => {};
+      err.toJSON = () => { };
 
       // Create the error.
       const handledErr = client._handleError(err);
@@ -180,10 +180,10 @@ describe('Healthchecks.io Ping Client Tests', () => {
 
     it(`should return an unmodified error`, () => {
       const err = new Error('Oops, something happened');
-  
+
       // Create the error.
       const handledErr = client._handleError(err);
-  
+
       expect(handledErr).to.be.an.instanceof(Error);
       expect(handledErr).to.eql(err);
     });
@@ -238,7 +238,7 @@ describe('Healthchecks.io Ping Client Tests', () => {
 
       expect(resp).to.be.a('string');
       expect(resp).to.eql('OK');
-      
+
       // Remove the mocks.
       nock.cleanAll();
     });
@@ -292,7 +292,7 @@ describe('Healthchecks.io Ping Client Tests', () => {
 
       expect(resp).to.be.a('string');
       expect(resp).to.eql('OK');
-      
+
       // Remove the mocks.
       nock.cleanAll();
     });
@@ -346,7 +346,7 @@ describe('Healthchecks.io Ping Client Tests', () => {
 
       expect(resp).to.be.a('string');
       expect(resp).to.eql('OK');
-      
+
       // Remove the mocks.
       nock.cleanAll();
     });
@@ -358,6 +358,49 @@ describe('Healthchecks.io Ping Client Tests', () => {
         .replyWithError('Something bad happened!');
 
       await expect(client.start()).to.be.rejectedWith(Error);
+
+      // Remove the mocks.
+      nock.cleanAll();
+    });
+  });
+});
+
+describe('Healthchecks.io Ping Tests', () => {
+  // Mock UUID.
+  const uuid = '3c1169a0-7b50-11ea-873d-3c970e75c219';
+
+  context('#ping()', () => {
+    it('should perform a success ping', async () => {
+      // Mock the API request.
+      nock(baseUrl)
+        .get(`/${uuid}`)
+        .reply(200, 'OK');
+
+      await expect(ping(uuid, 'success')).to.be.fulfilled;
+
+      // Remove the mocks.
+      nock.cleanAll();
+    });
+
+    it('should perform a success ping by default', async () => {
+      // Mock the API request.
+      nock(baseUrl)
+        .get(`/${uuid}`)
+        .reply(200, 'OK');
+
+      await expect(ping(uuid)).to.be.fulfilled;
+
+      // Remove the mocks.
+      nock.cleanAll();
+    });
+
+    it('should perform a fail ping', async () => {
+      // Mock the API request.
+      nock(baseUrl)
+        .get(`/${uuid}/fail`)
+        .reply(200, 'OK');
+
+      await expect(ping(uuid, 'fail')).to.be.fulfilled;
 
       // Remove the mocks.
       nock.cleanAll();
