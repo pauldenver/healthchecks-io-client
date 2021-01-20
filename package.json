@@ -1,7 +1,7 @@
 {
   "name": "healthchecks-io-client",
   "description": "A library for interacting with the Healthchecks.io API",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "./lib/index.js",
   "keywords": [
     "healthchecks.io",
@@ -15,6 +15,9 @@
     "type": "git",
     "url": "https://github.com/pauldenver/healthchecks-io-client.git"
   },
+  "bugs": {
+    "url": "https://github.com/pauldenver/healthchecks-io-client/issues"
+  },
   "author": "Paul Proctor <paulproctorjr@gmail.com>",
   "scripts": {
     "lint": "eslint ./lib/**/*.js",
@@ -25,28 +28,28 @@
     "test:codecov": "nyc report --reporter=text-lcov | codecov --pipe"
   },
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
-    "axios": "^0.19.2",
+    "joi": "^17.3.0",
+    "axios": "^0.21.1",
     "lodash.has": "^4.5.2",
     "lodash.isempty": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
-    "qs": "^6.9.3"
+    "qs": "^6.9.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "codecov": "^3.6.5",
-    "coveralls": "^3.0.11",
-    "eslint": "^6.8.0",
+    "codecov": "^3.8.1",
+    "coveralls": "^3.1.0",
+    "eslint": "^7.17.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-plugin-import": "^2.20.2",
-    "mocha": "^7.1.1",
-    "nock": "^12.0.3",
-    "nyc": "^15.0.1",
+    "eslint-plugin-import": "^2.22.1",
+    "mocha": "^8.2.1",
+    "nock": "^13.0.5",
+    "nyc": "^15.1.0",
     "rewire": "^5.0.0"
   },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">=10.12.0"
   },
   "license": "Apache-2.0"
 }

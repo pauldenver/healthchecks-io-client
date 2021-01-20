@@ -16,6 +16,7 @@ const userAgent = clientRewire.__get__('USER_AGENT');
 
 describe('Healthchecks.io API Client Tests', () => {
   let client;
+  let reqHeaders;
 
   const clientOptions = {
     apiKey: '5606f20bd449cfb873d82f59fecb7bba'
@@ -23,6 +24,8 @@ describe('Healthchecks.io API Client Tests', () => {
 
   beforeEach(() => {
     client = new HealthChecksApiClient(clientOptions);
+
+    reqHeaders = { reqheaders: client._headers };
   });
   
   context(`'HealthChecksApiClient' Class instance`, () => {
@@ -101,6 +104,16 @@ describe('Healthchecks.io API Client Tests', () => {
       expect(client.deleteCheck).to.be.an.instanceof(Function);
     });
 
+    it(`should have a public 'listPings' method`, () => {
+      expect(client.listPings).to.be.an('function');
+      expect(client.listPings).to.be.an.instanceof(Function);
+    });
+
+    it(`should have a public 'listFlips' method`, () => {
+      expect(client.listFlips).to.be.an('function');
+      expect(client.listFlips).to.be.an.instanceof(Function);
+    });
+
     it(`should have a public 'getIntegrations' method`, () => {
       expect(client.getIntegrations).to.be.an('function');
       expect(client.getIntegrations).to.be.an.instanceof(Function);
@@ -111,15 +124,14 @@ describe('Healthchecks.io API Client Tests', () => {
     it(`should have a private '_options' property`, () => {
       let otherClient;
       
-      try {
-        expect(client).to.have.property('_options');
-        expect(client._options).to.be.an('object');
-        expect(client._options).to.eql(clientOptions);
+      expect(client).to.have.property('_options');
+      expect(client._options).to.be.an('object');
+      expect(client._options).to.eql(clientOptions);
 
+      expect(() => {
         otherClient = new HealthChecksApiClient();
-      } catch(err) {
-        expect(otherClient).to.be.undefined;
-      }
+      }).to.throw();
+      expect(otherClient).to.be.undefined;
     });
 
     it(`should have a private '_apiKey' property`, () => {
@@ -142,13 +154,8 @@ describe('Healthchecks.io API Client Tests', () => {
     });
 
     it(`should throw an error when missing the 'apiKey'`, () => {
-      try {
-        client._checkApiKey({});
-      } catch(err) {
-        expect(err).to.be.an.instanceof(Error);
-        expect(err).to.have.property('message',
-          'A HealthChecks.io Api Key is a required option.');
-      }
+      expect(() => client._checkApiKey({})).to.throw(Error,
+        'A HealthChecks.io Api Key is a required option.');
     });
 
     it(`should throw an error when the 'apiKey' is empty`, () => {
@@ -156,13 +163,8 @@ describe('Healthchecks.io API Client Tests', () => {
         apiKey: ''
       };
 
-      try {
-        client._checkApiKey(options);
-      } catch(err) {
-        expect(err).to.be.an.instanceof(Error);
-        expect(err).to.have.property('message',
-          'A HealthChecks.io Api Key is a required option.');
-      }
+      expect(() => client._checkApiKey(options)).to.throw(Error,
+        'A HealthChecks.io Api Key is a required option.');
     });
   });
 
@@ -201,13 +203,8 @@ describe('Healthchecks.io API Client Tests', () => {
     it(`should throw an error when missing the 'apiKey'`, () => {
       client._apiKey = null;
 
-      try {
-        client._getRequestHeaders();
-      } catch (err) {
-        expect(err).to.be.an.instanceof(Error);
-        expect(err).to.have.property('message',
-          'Missing the Api Key (apiKey).');
-      }
+      expect(() => client._getRequestHeaders()).to.throw(Error,
+        'Missing the Api Key (apiKey).');
     });
   });
 
@@ -289,7 +286,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it('should return a Healthcheck.io API response', async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .get(`/api/v1/checks/${checkUuid}`)
         .reply(200, response);
 
@@ -308,7 +305,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it('should return a full Healthcheck.io API response', async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .get(`/api/v1/checks/${checkUuid}`)
         .reply(200, response);
 
@@ -442,7 +439,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should return a list of health checks`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .get('/api/v1/checks/')
         .reply(200, response);
 
@@ -456,7 +453,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should throw an error when getting the health checks`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .get('/api/v1/checks/')
         .replyWithError('Something bad happened!');
 
@@ -488,7 +485,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should return a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .get(`/api/v1/checks/${checkUuid}`)
         .reply(200, response);
 
@@ -502,7 +499,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should throw an error when getting a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .get(`/api/v1/checks/${checkUuid}`)
         .replyWithError('Something bad happened!');
 
@@ -532,7 +529,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should create a new health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .post('/api/v1/checks/')
         .reply(200, response);
 
@@ -549,7 +546,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should throw an error when creating a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .post('/api/v1/checks/')
         .replyWithError('Something bad happened!');
 
@@ -581,7 +578,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should update a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .post(`/api/v1/checks/${checkUuid}`)
         .reply(200, response);
 
@@ -597,7 +594,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should throw an error when updating a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .post(`/api/v1/checks/${checkUuid}`)
         .replyWithError('Something bad happened!');
 
@@ -629,7 +626,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should pause a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .post(`/api/v1/checks/${checkUuid}/pause`)
         .reply(200, response);
 
@@ -643,7 +640,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should throw an error when pausing a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .post(`/api/v1/checks/${checkUuid}/pause`)
         .replyWithError('Something bad happened!');
 
@@ -675,7 +672,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should delete a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .delete(`/api/v1/checks/${checkUuid}`)
         .reply(200, response);
 
@@ -689,11 +686,122 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should throw an error when deleting a health check`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .delete(`/api/v1/checks/${checkUuid}`)
         .replyWithError('Something bad happened!');
 
       await expect(client.deleteCheck(checkUuid)).to.be.rejectedWith(Error);
+
+      // Remove the mocks.
+      nock.cleanAll();
+    });
+  });
+
+  context('#listPings()', () => {
+    const checkUuid = '3c1169a0-7b50-11ea-873d-3c970e75c219';
+
+    const response = {
+      pings: [
+        {
+          type: 'success',
+          date: '2020-11-22T16:43:37.284169+00:00',
+          n: 124,
+          scheme: 'https',
+          remote_addr: '127.0.0.1',
+          method: 'POST',
+          ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+            '(KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36',
+        },
+        {
+          type: 'success',
+          date: '2020-11-21T16:50:55.788416+00:00',
+          n: 123,
+          scheme: 'https',
+          remote_addr: '127.0.0.1',
+          method: 'GET',
+          ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+            '(KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36',
+        }
+      ]
+    };
+
+    it(`should return a list of pings for a health check`, async () => {
+      // Mock the API request.
+      nock(baseUrl, reqHeaders)
+        .get(`/api/v1/checks/${checkUuid}/pings`)
+        .reply(200, response);
+
+      const pings = await client.listPings(checkUuid);
+
+      expect(pings).to.eql(response);
+
+      // Remove the mocks.
+      nock.cleanAll();
+    });
+
+    it(`should throw an error when getting a list of pings`, async () => {
+      // Mock the API request.
+      nock(baseUrl, reqHeaders)
+        .get(`/api/v1/checks/${checkUuid}/pings`)
+        .replyWithError('Something bad happened!');
+
+      await expect(client.listPings(checkUuid)).to.be.rejectedWith(Error);
+
+      // Remove the mocks.
+      nock.cleanAll();
+    });
+  });
+
+  context('#listFlips()', () => {
+    const checkUuid = '3c1169a0-7b50-11ea-873d-3c970e75c219';
+
+    const response = {
+      flips: [
+        { timestamp: '2020-11-23T17:43:37+00:00', up: 0 },
+        { timestamp: '2020-11-21T16:50:55+00:00', up: 1 },
+        { timestamp: '2020-11-12T16:54:03+00:00', up: 0 },
+        { timestamp: '2020-11-11T14:24:57+00:00', up: 1 },
+        { timestamp: '2020-11-09T18:17:37+00:00', up: 0 },
+        { timestamp: '2020-11-07T16:39:59+00:00', up: 1 },
+      ]
+    };
+
+    it(`should return a list of flips for a health check`, async () => {
+      // Mock the API request.
+      nock(baseUrl, reqHeaders)
+        .get(`/api/v1/checks/${checkUuid}/flips`)
+        .reply(200, response);
+
+      const flips = await client.listFlips(checkUuid);
+
+      expect(flips).to.eql(response);
+
+      // Remove the mocks.
+      nock.cleanAll();
+    });
+
+    it(`should return a filtered list of flips for a health check`, async () => {
+      // Mock the API request.
+      nock(baseUrl, reqHeaders)
+        .get(`/api/v1/checks/${checkUuid}/flips`)
+        .query({ seconds: 3600 })
+        .reply(200, { flips: [ response.flips[2] ] });
+
+      const flips = await client.listFlips(checkUuid, { seconds: 3600 });
+
+      expect(flips).to.eql({ flips: [ response.flips[2] ] });
+
+      // Remove the mocks.
+      nock.cleanAll();
+    });
+
+    it(`should throw an error when getting a list of flips`, async () => {
+      // Mock the API request.
+      nock(baseUrl, reqHeaders)
+        .get(`/api/v1/checks/${checkUuid}/flips`)
+        .replyWithError('Something bad happened!');
+
+      await expect(client.listFlips(checkUuid)).to.be.rejectedWith(Error);
 
       // Remove the mocks.
       nock.cleanAll();
@@ -713,7 +821,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should return a list of integrations`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .get('/api/v1/channels')
         .reply(200, response);
 
@@ -727,7 +835,7 @@ describe('Healthchecks.io API Client Tests', () => {
 
     it(`should throw an error when getting the integrations`, async () => {
       // Mock the API request.
-      nock(baseUrl)
+      nock(baseUrl, reqHeaders)
         .get('/api/v1/channels')
         .replyWithError('Something bad happened!');
 

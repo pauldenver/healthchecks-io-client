@@ -15,6 +15,7 @@ const userAgent = clientRewire.__get__('USER_AGENT');
 
 describe('Healthchecks.io Ping Client Tests', () => {
   let client;
+  let reqHeaders;
 
   const clientOptions = {
     uuid: '3c1169a0-7b50-11ea-873d-3c970e75c219',
@@ -22,6 +23,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
 
   beforeEach(() => {
     client = new HealthChecksPingClient(clientOptions);
+
+    reqHeaders = { reqheaders: client._headers };
   });
 
   context(`'HealthChecksPingClient' Class instance`, () => {
@@ -80,15 +83,14 @@ describe('Healthchecks.io Ping Client Tests', () => {
     it(`should have a private '_options' property`, () => {
       let otherClient;
 
-      try {
-        expect(client).to.have.property('_options');
-        expect(client._options).to.be.an('object');
-        expect(client._options).to.eql(clientOptions);
+      expect(client).to.have.property('_options');
+      expect(client._options).to.be.an('object');
+      expect(client._options).to.eql(clientOptions);
 
+      expect(() => {
         otherClient = new HealthChecksPingClient();
-      } catch (err) {
-        expect(otherClient).to.be.undefined;
-      }
+      }).to.throw();
+      expect(otherClient).to.be.undefined;
 
       expect(() => new HealthChecksPingClient(undefined)).to.throw(Error);
     });
@@ -216,8 +218,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
 
   context('#success()', () => {
     it('should perform a success ping', async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}`)
         .reply(200, 'OK');
 
@@ -228,8 +230,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
     });
 
     it('should perform a success ping and return a response', async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}`)
         .reply(200, 'OK');
 
@@ -244,8 +246,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
     });
 
     it('should perform a success ping with payload data', async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .post(`/${clientOptions.uuid}`)
         .reply(200, 'OK');
 
@@ -256,8 +258,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
     });
 
     it('should throw an error when performing a success ping', async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}`)
         .replyWithError('Something bad happened!');
 
@@ -270,8 +272,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
 
   context('#fail()', () => {
     it('should perform a fail ping', async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}/fail`)
         .reply(200, 'OK');
 
@@ -282,8 +284,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
     });
 
     it('should perform a fail ping and return a response', async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}/fail`)
         .reply(200, 'OK');
 
@@ -298,8 +300,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
     });
 
     it('should perform a fail ping with payload data', async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .post(`/${clientOptions.uuid}/fail`)
         .reply(200, 'OK');
 
@@ -310,8 +312,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
     });
 
     it('should throw an error when performing a fail ping', async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}/fail`)
         .replyWithError('Something bad happened!');
 
@@ -324,8 +326,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
 
   context('#start()', () => {
     it(`should send a 'job started' message`, async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}/start`)
         .reply(200, 'OK');
 
@@ -336,8 +338,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
     });
 
     it(`should send a 'job started' message and return a response`, async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}/start`)
         .reply(200, 'OK');
 
@@ -352,8 +354,8 @@ describe('Healthchecks.io Ping Client Tests', () => {
     });
 
     it(`should throw an error when sending a 'job started' message`, async () => {
-      // Mock the API request.
-      nock(baseUrl)
+      // Mock the request.
+      nock(baseUrl, reqHeaders)
         .get(`/${clientOptions.uuid}/start`)
         .replyWithError('Something bad happened!');
 
@@ -371,7 +373,7 @@ describe('Healthchecks.io Ping Tests', () => {
 
   context('#ping()', () => {
     it('should perform a success ping', async () => {
-      // Mock the API request.
+      // Mock the request.
       nock(baseUrl)
         .get(`/${uuid}`)
         .reply(200, 'OK');
@@ -383,7 +385,7 @@ describe('Healthchecks.io Ping Tests', () => {
     });
 
     it('should perform a success ping by default', async () => {
-      // Mock the API request.
+      // Mock the request.
       nock(baseUrl)
         .get(`/${uuid}`)
         .reply(200, 'OK');
@@ -395,7 +397,7 @@ describe('Healthchecks.io Ping Tests', () => {
     });
 
     it('should perform a fail ping', async () => {
-      // Mock the API request.
+      // Mock the request.
       nock(baseUrl)
         .get(`/${uuid}/fail`)
         .reply(200, 'OK');

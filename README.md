@@ -133,7 +133,8 @@ These are the available options for creating a `HealthChecksApiClient` instance.
 | `timeout`           | `5000`                       | Number of milliseconds before the request times out               |
 | `baseUrl`           | `https://healthchecks.io`    | Base URL for the <span>Healthchecks</span>&#46;io Management API  |
 | `fullResponse`      | `false`                      | Get the full response instead of just the body                    |
-| `maxContentLength`  | `10000`                      | The max size of the HTTP response content in bytes                |  
+| `maxContentLength`  | `10000`                      | The max size of the HTTP response content in bytes                |
+| `maxBodyLength`     | `2000`                       | The max allowed size of the HTTP request body in bytes            |  
 <br />
 
 ## Examples
@@ -279,10 +280,12 @@ async function createHealthCheck() {
 - **`pingClient.success(payload)`** - Send a "success" ping on task completion (with optional payload) - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)  
 - **`pingClient.fail(payload)`** - Send a "fail" ping on task failure (with optional payload) - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)
 - **`pingClient.start()`** - Sends a "job has started!" message - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)  
+<br />
 
 #### `ping` Wrapper Documentation:
 
 - **`ping(uuid, action, payload)`** - Send a "success" or "fail" ping on task completion or task failure (with optional payload) - [Healthchecks.io Documentation](https://healthchecks.io/docs/http_api/)  
+<br />
 
 #### `HealthChecksApiClient` Documentation:
 
@@ -292,25 +295,14 @@ async function createHealthCheck() {
 - **`apiClient.updateCheck(uuid, checkInfo)`** - Updates an existing health check - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#update-check)  
 - **`apiClient.pauseCheck(uuid)`** - Disables monitoring for a check, without removing it - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#pause-check)  
 - **`apiClient.deleteCheck(uuid)`** - Permanently deletes a health check - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#delete-check)  
+- **`apiClient.listPings(uuid)`** - Gets a list of pings a health check has received - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#list-pings)  
+- **`apiClient.listFlips(uuid, params)`** - Gets a list of flips (status changes) a health check has experienced - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#list-flips)  
 - **`apiClient.getIntegrations()`** - Gets a list of integrations - [Healthchecks.io Documentation](https://healthchecks.io/docs/api/#list-channels)  
+<br />
 
 ## Change Log
 
-### v1.0.3
-
-- Updated documentation.
-
-### v1.0.2
-
-- Added a shorthand version (wrapper) for `HealthChecksPingClient` pings.
-
-### v1.0.1
-
-- Added input validation using `Joi`.
-
-### v1.0.0
-
-- Initial release
+The [CHANGELOG](./CHANGELOG.md) contains descriptions of notable changes.  
 
 ## License
 
